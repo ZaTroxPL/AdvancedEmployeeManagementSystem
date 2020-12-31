@@ -1,92 +1,39 @@
+import 'react-native-gesture-handler';
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { ScrollView, StyleSheet, Text, View, Button } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { ProfileScreen } from "./Pages/Profile Page/profile-page.js";
+import { HolidayRequest } from "./Pages/Profile Page/Holiday Request/holiday-request.js"
+
+const Stack = createStackNavigator();
 
 export default function App() {
   return (
-    <ScrollView contentContainerStyle={styles.scrollContainer}>
-      <View style={styles.container}>
-        <Text style={styles.heading}>Employee Management System</Text>
-      </View>
-      <EmployeeDetails />
-      <EmployeeInteractions />
-    </ScrollView>
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Home">
+        <Stack.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{ title: 'Welcome' }}
+        />
+        <Stack.Screen name="Profile" component={ProfileScreen} />
+        <Stack.Screen name="Holiday Request" component={HolidayRequest} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 
-export function EmployeeDetails() {
-  const salary = 23000;
-  const holidaysLeft = 1;
-  const leaveStatus = true;
-  const employeeName = "Jakub Panczyszyn";
-
+export function HomeScreen({ navigation }) {
   return (
     <View>
-      <View style={[styles.container, styles.column]}>
-        <Text style={styles.valueDisplay}>
-          Name: {employeeName}
-        </Text>
-        <Text style={styles.valueDisplay}>
-          Salary: £{salary}
-        </Text>
-        <Text style={styles.valueDisplay}>
-          Leave Status: {leaveStatus ? "On Leave" : "At Work"}
-        </Text>
-        <Text style={styles.valueDisplay}>
-          Holidays Left: {holidaysLeft} {holidaysLeft > 1 || holidaysLeft < 1 ? "days" : "day"}
-        </Text>
-      </View>
+      <Button
+        title="View Your Profile"
+        onPress={() => {
+          navigation.navigate('Profile')
+        }}
+      />
     </View>
   );
 }
-
-export function EmployeeInteractions() {
-  return (
-    <View style={[styles.container, styles.flexWrap, styles.row]}>
-      <View style={styles.button}>
-        <Button title="Submit Holiday Request" />
-      </View>
-      <View style={styles.button}>
-        <Button title="Report Complaint" />
-      </View>
-      <View style={styles.button}>
-        <Button title="I Want to Resign" />
-      </View>
-    </View>
-  );
-}
-
-
-const styles = StyleSheet.create({
-  scrollContainer: {
-    padding: 15
-  },
-  flexWrap: {
-    flexWrap: 'wrap'
-  },
-  row: {
-    flexDirection: 'row'
-  },
-  column: {
-    flexDirection: 'column'
-  },
-  container: {
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 15,
-    marginBottom: 15,
-  },
-  heading: {
-    fontSize: '2em',
-    fontWeight: 'bold'
-  },
-  valueDisplay: {
-    margin: 15,
-    fontSize: '1.25em',
-    fontWeight: 'bold'
-  },
-  button: {
-    margin: 15
-  }
-});
