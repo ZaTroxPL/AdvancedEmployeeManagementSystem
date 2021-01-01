@@ -17,7 +17,7 @@ export function ProfileScreen({ navigation }) {
     );
 }
 
-export function EmployeeDetails() {
+function EmployeeDetails() {
     const salary = 23000;
     const holidaysLeft = 1;
     const leaveStatus = true;
@@ -43,7 +43,7 @@ export function EmployeeDetails() {
     );
 }
 
-export function EmployeeInteractions(props) {
+function EmployeeInteractions(props) {
     return (
         <View style={[styles.container, styles.flexWrap, styles.row]}>
             <View style={styles.button}>

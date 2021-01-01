@@ -1,12 +1,95 @@
-import React from 'react';
-import { ScrollView, StyleSheet, Text, View, Button } from 'react-native';
+import React, { useState } from 'react';
+import { ScrollView, StyleSheet, Text, View, Button, Platform } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
+import RNDateTimePicker from '@react-native-community/datetimepicker';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+
 
 export function HolidayRequest({ navigation }) {
-    return(
+    return (
         <ScrollView style={styles.scrollContainer}>
+            <StartEndDatePickers />
             <TextInput multiline={true} style={styles.textInput} />
         </ScrollView>
+    );
+}
+
+function StartEndDatePickers() {
+    const [startDate, setStartDate] = useState(null);
+    const [endDate, setEndDate] = useState(null);
+    const [show, setShow] = useState(false);
+    const [dateType, setDateType] = useState(null);
+
+    const onChange = (event, selectedDate) => {
+        setShow(Platform.OS === 'ios');
+        if (dateType === "start") {
+            setStartDate(selectedDate);
+        }
+        else if (dateType === "end") {
+            setEndDate(selectedDate)
+        }
+    };
+
+    function showStartDatePicker() {
+        setShow(true);
+        setDateType("start");
+    };
+
+    function showEndDatePicker() {
+        setShow(true);
+        setDateType("end");
+    };
+
+    return (
+        <View>
+            {Platform.OS === "web" && (
+                <View style={styles.row}>
+                    <View>
+                        <DatePicker
+                            dateFormat="dd/MM/yyyy"
+                            selected={startDate}
+                            onChange={date => setStartDate(date)}
+                            placeholderText="Start Date"
+                        />
+                    </View>
+                    <View>
+                        <DatePicker
+                            dateFormat="dd/MM/yyyy"
+                            selected={startDate}
+                            onChange={date => setEndDate(date)}
+                            placeholderText="End Date"
+                        />
+                    </View>
+                </View>
+            ) || Platform.OS !== "web" && (
+                <View style={styles.row}>
+                    <View>
+                        <Button onPress={showStartDatePicker} title="Pick Start Date" />
+                    </View>
+                    <View>
+                        <Button onPress={showEndDatePicker} title="Pick End Date" />
+                    </View>
+                    {show && (
+                        <RNDateTimePicker
+                            value={new Date()}
+                            mode="date"
+                            is24Hour={true}
+                            display="default"
+                            onChange={onChange}
+                        />
+                    )}
+                </View>
+            )}
+            <View style={styles.row}>
+                <View>
+                    {startDate && (<Text>{startDate?.getDate() + "/" + startDate?.getMonth() + 1 + "/" + startDate?.getFullYear()}</Text>)}
+                </View>
+                <View>
+                    {endDate && (<Text>{endDate?.getDate() + "/" + endDate?.getMonth() + 1 + "/" + endDate?.getFullYear()}</Text>)}
+                </View>
+            </View>
+        </View>
     );
 }
 
@@ -19,5 +102,11 @@ const styles = StyleSheet.create({
         borderColor: 'black',
         borderWidth: 1,
         height: 90,
-    },    
+    },
+    row: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: 15,
+        marginTop: 15
+    },
 });
