@@ -6,6 +6,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { ProfileScreen } from "./Pages/Profile Page/profile-page.js";
 import { HolidayRequest } from "./Pages/Profile Page/Holiday Request/holiday-request.js"
+import { ReportComplaint } from './Pages/Profile Page/Report Complaint/report-complaint.js';
 
 const Stack = createStackNavigator();
 
@@ -20,6 +21,7 @@ export default function App() {
         />
         <Stack.Screen name="Profile" component={ProfileScreen} />
         <Stack.Screen name="Holiday Request" component={HolidayRequest} />
+        <Stack.Screen name="Report Complaint" component={ReportComplaint} />
       </Stack.Navigator>
     </NavigationContainer>
   );

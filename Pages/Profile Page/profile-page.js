@@ -4,10 +4,11 @@ import React from 'react';
 import { ScrollView, StyleSheet, Text, View, Button } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { StandardStyles } from "../../StandardStyles.js";
 
 export function ProfileScreen({ navigation }) {
     return (
-        <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <ScrollView contentContainerStyle={StandardStyles.scrollContainer}>
             <View style={styles.container}>
                 <Text style={styles.heading}>Employee Management System</Text>
             </View>
@@ -25,7 +26,7 @@ function EmployeeDetails() {
 
     return (
         <View>
-            <View style={[styles.container, styles.column]}>
+            <View style={[styles.container, StandardStyles.column]}>
                 <Text style={styles.valueDisplay}>
                     Name: {employeeName}
                 </Text>
@@ -45,15 +46,20 @@ function EmployeeDetails() {
 
 function EmployeeInteractions(props) {
     return (
-        <View style={[styles.container, styles.flexWrap, styles.row]}>
+        <View style={[styles.container, styles.flexWrap, StandardStyles.row]}>
             <View style={styles.button}>
                 <Button title="Submit Holiday Request"
                     onPress={() => {
                         props.navigation.navigate('Holiday Request')
-                    }} />
+                    }} 
+                />
             </View>
             <View style={styles.button}>
-                <Button title="Report Complaint" />
+                <Button title="Report Complaint" 
+                    onPress={() => {
+                        props.navigation.navigate('Report Complaint')
+                    }}
+                />
             </View>
             <View style={styles.button}>
                 <Button title="I Want to Resign" />
@@ -63,18 +69,9 @@ function EmployeeInteractions(props) {
 }
 
 const styles = StyleSheet.create({
-    scrollContainer: {
-        padding: 15
-    },
     flexWrap: {
         flexWrap: 'wrap'
-    },
-    row: {
-        flexDirection: 'row'
-    },
-    column: {
-        flexDirection: 'column'
-    },
+    },    
     container: {
         alignItems: 'center',
         justifyContent: 'center',

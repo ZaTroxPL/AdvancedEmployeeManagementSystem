@@ -2,22 +2,26 @@ import React, { useState } from 'react';
 import { ScrollView, StyleSheet, Text, View, Button, Platform } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import RNDateTimePicker from '@react-native-community/datetimepicker';
-import { set } from 'react-native-reanimated';
+import { StandardStyles } from '../../../StandardStyles';
+import SegmentedControlTab from 'react-native-segmented-control-tab';
+import { useLinkProps } from '@react-navigation/native';
 
 
 export function HolidayRequest({ navigation }) {
     const [text, setText] = useState("");
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
+    const [timeOfDay, setTimeOfDay] = useState(null)
 
     return (
-        <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <ScrollView contentContainerStyle={StandardStyles.scrollContainer}>
             <View
                 style={StyleSheet.create({
                     flex: 1
                 })}
             >
                 <StartEndDatePickers
+                    setParentTimeOfDay={setTimeOfDay}
                     setParentStartDate={setStartDate}
                     setParentEndDate={setEndDate}
                 />
@@ -48,6 +52,7 @@ function StartEndDatePickers(prop) {
     const [endDate, setEndDate] = useState(null);
     const [show, setShow] = useState(false);
     const [dateType, setDateType] = useState(null);
+    const [timeOfDay, setTimeOfDay] = useState();
 
     const onChange = (event, selectedDate) => {
         setShow(Platform.OS === 'ios');
@@ -81,14 +86,29 @@ function StartEndDatePickers(prop) {
         prop.setParentEndDate(null);
     }
 
+    function setParentTimeOfDay(pickedOption) {
+        setTimeOfDay(pickedOption);
+        prop.setParentTimeOfDay(pickedOption)
+    }
+
     return (
         <View>
+            <View>
+                <Text style={styles.marginBottom}>
+                    Pick Time of Day:
+                </Text>
+                <SegmentedControlTab 
+                    values={["Morning", "Afternoon", "Whole Day"]}
+                    selectedIndex={timeOfDay}
+                    onTabPress={setParentTimeOfDay}
+                />
+            </View>
             <View style={[styles.row, styles.datePicker]}>
                 <View>
-                    <View style={styles.standardRow}>
+                    <View style={StandardStyles.row}>
                         <Button onPress={showStartDatePicker} title="Pick Start Date" />
                     </View>
-                    <View style={[styles.standardRow, styles.dateDisplay, styles.selfAlignStart]}>
+                    <View style={[StandardStyles.row, styles.dateDisplay, StandardStyles.selfAlignStart]}>
                         <View style={styles.cancelButtonLeft}>
                             <Button onPress={clearStartDate} title="X" />
                         </View>
@@ -100,10 +120,10 @@ function StartEndDatePickers(prop) {
                     </View>
                 </View>
                 <View>
-                    <View style={styles.standardRow}>
+                    <View style={StandardStyles.row}>
                         <Button onPress={showEndDatePicker} title="Pick End Date" />
                     </View>
-                    <View style={[styles.standardRow, styles.dateDisplay, styles.selfAlignEnd]}>                        
+                    <View style={[StandardStyles.row, styles.dateDisplay, StandardStyles.selfAlignEnd]}>                        
                         {endDate && (
                             <Text>
                                 {endDate?.getDate() + "/" + (endDate?.getMonth() + 1) + "/" + endDate?.getFullYear()}
@@ -129,10 +149,6 @@ function StartEndDatePickers(prop) {
 }
 
 const styles = StyleSheet.create({
-    scrollContainer: {
-        padding: 15,
-        flexGrow: 1
-    },
     textInput: {
         backgroundColor: 'white',
         borderColor: 'black',
@@ -145,9 +161,6 @@ const styles = StyleSheet.create({
         marginBottom: 15,
         marginTop: 15,
     },
-    standardRow: {
-        flexDirection: 'row'
-    },
     datePicker: {
         justifyContent: 'space-between'
     },
@@ -155,16 +168,13 @@ const styles = StyleSheet.create({
         marginTop: 15,
         alignItems: 'center'
     },
-    selfAlignStart: {
-        alignSelf: 'flex-start'
-    },
-    selfAlignEnd: {
-        alignSelf: 'flex-end'
-    },
     cancelButtonLeft: {
         marginRight: 10
     },
     cancelButtonRight: {
         marginLeft: 10
+    },
+    marginBottom: {
+        marginBottom: 5
     }
 });
