@@ -60,10 +60,7 @@ function EmployeeInteractions(props) {
                         props.navigation.navigate('Report Complaint')
                     }}
                 />
-            </View>
-            <View style={styles.button}>
-                <Button title="I Want to Resign" />
-            </View>
+            </View>            
         </View>
     );
 }

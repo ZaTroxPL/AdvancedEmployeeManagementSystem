@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import { ScrollView, StyleSheet, Text, View, Button, Platform } from 'react-native';
+import { ScrollView, StyleSheet, Text, View, Button, Platform, Alert } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import RNDateTimePicker from '@react-native-community/datetimepicker';
 import { StandardStyles } from '../../../StandardStyles';
 import SegmentedControlTab from 'react-native-segmented-control-tab';
 import { useLinkProps } from '@react-navigation/native';
+var moment = require('moment');
+moment().format(); 
 
 
 export function HolidayRequest({ navigation }) {
@@ -31,18 +33,50 @@ export function HolidayRequest({ navigation }) {
                     flex: 99
                 })}
             >
-                <TextInput 
-                    multiline={true} 
-                    style={styles.textInput} 
-                    onChangeText={text => setText(text)}                    
-                />                
-                <Button 
-                    title="Submit"
-                    onPress={function () {                        
-                        // TODO: Send text, start and end date to the database
-                    }} 
+                <TextInput
+                    multiline={true}
+                    style={styles.textInput}
+                    onChangeText={text => setText(text)}
                 />
-            </View>           
+                <Button
+                    title="Submit"
+                    onPress={function () {
+                        var isError = false;
+                        var errorMessage = "";
+
+                        if (endDate == null) {
+                            isError = true;
+                            errorMessage = "End Date is empty";
+                        }
+                        else if (startDate == null) {
+                            isError = true;
+                            errorMessage = "Start Date is empty";
+                        }
+                        else if (endDate != null && startDate > endDate) {
+                            isError = true;
+                            errorMessage = "Start Date cannot be after End Date";
+                        }
+                        else if (startDate != null && endDate < startDate) {
+                            isError = true;
+                            errorMessage = "End Date cannot be before Start Date";
+                        }
+
+                        if (isError) {
+                            Alert.alert(
+                                "Date Error",
+                                errorMessage,
+                                [
+                                    { text: "OK", onPress: () => console.log("OK Pressed") }
+                                ]
+                            );
+                            return;
+                        } 
+
+                        // TODO: Send text, start and end date to the database
+                        
+                    }}
+                />
+            </View>
         </ScrollView>
     );
 }
@@ -57,12 +91,36 @@ function StartEndDatePickers(prop) {
     const onChange = (event, selectedDate) => {
         setShow(Platform.OS === 'ios');
         if (dateType === "start") {
-            setStartDate(selectedDate);
-            prop.setParentStartDate(selectedDate);
+            compareTimeOfDay(timeOfDay, selectedDate, endDate);
+            if (endDate != null && selectedDate > endDate) {
+                Alert.alert(
+                    "Start Date Error",
+                    "Start Date cannot be after End Date",
+                    [
+                        { text: "OK", onPress: () => console.log("OK Pressed") }
+                    ]
+                );
+            }
+            else {
+                setStartDate(selectedDate);
+                prop.setParentStartDate(selectedDate);
+            }
         }
         else if (dateType === "end") {
-            setEndDate(selectedDate);
-            prop.setParentEndDate(selectedDate);
+            compareTimeOfDay(timeOfDay, startDate, selectedDate);
+            if (startDate != null && selectedDate < startDate) {
+                Alert.alert(
+                    "End Date Error",
+                    "End Date cannot be before Start Date",
+                    [
+                        { text: "OK", onPress: () => console.log("OK Pressed") }
+                    ]
+                );
+            }
+            else {
+                setEndDate(selectedDate);
+                prop.setParentEndDate(selectedDate);
+            }
         }
     };
 
@@ -86,9 +144,29 @@ function StartEndDatePickers(prop) {
         prop.setParentEndDate(null);
     }
 
-    function setParentTimeOfDay(pickedOption) {
+    function setParentTimeOfDay(pickedOption) {        
+        compareTimeOfDay(pickedOption, startDate, endDate);
         setTimeOfDay(pickedOption);
-        prop.setParentTimeOfDay(pickedOption)
+        prop.setParentTimeOfDay(pickedOption);
+    }
+
+    function compareTimeOfDay(pickedTimeOfDay, pickedStartDate, pickedEndDate) {
+        if ((pickedTimeOfDay == 0 || pickedTimeOfDay == 1) && (pickedStartDate != null && pickedEndDate != null)) {
+            var momentStartDate = moment(pickedStartDate);
+            var momentEndDate = moment(pickedEndDate);
+            var diffInDays = momentEndDate.diff(momentStartDate, "days");
+            if (diffInDays > 0) {
+                Alert.alert(
+                    "Time of Day Error",
+                    "You can only pick 1 day when applying for half a day off",
+                    [
+                        { text: "Clear End Date", onPress: () => setEndDate(null) },
+                        { text: "Clear Start Date", onPress: () => setStartDate(null) },
+                        { text: "Change Time of Day", onPress: () => setTimeOfDay(2) }
+                    ]
+                );
+            }
+        }
     }
 
     return (
@@ -97,7 +175,7 @@ function StartEndDatePickers(prop) {
                 <Text style={styles.marginBottom}>
                     Pick Time of Day:
                 </Text>
-                <SegmentedControlTab 
+                <SegmentedControlTab
                     values={["Morning", "Afternoon", "Whole Day"]}
                     selectedIndex={timeOfDay}
                     onTabPress={setParentTimeOfDay}
@@ -123,7 +201,7 @@ function StartEndDatePickers(prop) {
                     <View style={StandardStyles.row}>
                         <Button onPress={showEndDatePicker} title="Pick End Date" />
                     </View>
-                    <View style={[StandardStyles.row, styles.dateDisplay, StandardStyles.selfAlignEnd]}>                        
+                    <View style={[StandardStyles.row, styles.dateDisplay, StandardStyles.selfAlignEnd]}>
                         {endDate && (
                             <Text>
                                 {endDate?.getDate() + "/" + (endDate?.getMonth() + 1) + "/" + endDate?.getFullYear()}
