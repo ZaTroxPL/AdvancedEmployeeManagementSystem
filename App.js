@@ -7,7 +7,8 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { ProfileScreen } from "./Pages/Profile Page/profile-page.js";
 import { HolidayRequest } from "./Pages/Profile Page/Holiday Request/holiday-request.js"
 import { ReportComplaint } from './Pages/Profile Page/Report Complaint/report-complaint.js';
-import { ViewEmployees } from './Pages/View Employees/view-employees.js';
+import { ManagerialView } from './Pages/Managerial View/managerial-view.js';
+import { SubordinateList } from './Pages/Managerial View/View Subordinates/view-subordinates.js';
 
 const Stack = createStackNavigator();
 
@@ -18,12 +19,13 @@ export default function App() {
         <Stack.Screen
           name="Home"
           component={HomeScreen}
-          options={{ title: 'Welcome' }}
+          options={{ title: 'Employee Management System' }}
         />
         <Stack.Screen name="Profile" component={ProfileScreen} />
         <Stack.Screen name="Holiday Request" component={HolidayRequest} />
         <Stack.Screen name="Report Complaint" component={ReportComplaint} />
-        <Stack.Screen name="View Employees" component={ViewEmployees} />
+        <Stack.Screen name="Managerial View" component={ManagerialView} />
+        <Stack.Screen name="Subordinate List" component={SubordinateList} />
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -42,9 +44,9 @@ export function HomeScreen({ navigation }) {
       </View>
       <View style={styles.buttons}>
         <Button
-          title="View Your Employees"
+          title="Managerial View"
           onPress={() => {
-            navigation.navigate('View Employees')
+            navigation.navigate('Managerial View')
           }}
         />
       </View>

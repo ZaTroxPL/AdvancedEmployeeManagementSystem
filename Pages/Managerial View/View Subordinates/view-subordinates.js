@@ -3,10 +3,10 @@ import { ScrollView, StyleSheet, Text, View, Button, Platform } from 'react-nati
 import { TextInput } from 'react-native-gesture-handler';
 import { StandardStyles } from '../../StandardStyles';
 
-export function ViewEmployees({ nvaigation }) {
+export function SubordinateList({navigation}) {
     return (
-        <ScrollView contentContainerStyle={StandardStyles.scrollContainer}>
-
+        <ScrollView>
+            
         </ScrollView>
     );
 }
