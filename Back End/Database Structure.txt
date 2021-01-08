@@ -1,0 +1,91 @@
+|Users  
+|------
+|ID     
+|------
+
+|Accounts
+|---------------|--------------
+|account_ID 	|PK - GUID
+|user_ID 	|SK (Users)
+|manager_ID 	|SK (Users)
+|holidays_ID	|SK (Holidays)
+|is_employee 	|boolean
+|is_manager 	|boolean
+|salary 	|money
+|---------------|--------------
+
++------------------------+
+| HOLIDAYS SECTION START |
++------------------------+
+
+|Holidays
+|---------------|--------------
+|holiday_ID	|PK - GUID
+|total_holidays	|number
+|holidays_left	|number
+|holidays_booked|number
+|is_on_holiday 	|boolean
+|on_holiday_for	|number
+|---------------|--------------
+
+|Holiday Requests	
+|-----------------------|-----------------
+|holiday_request_ID	|PK - GUID
+|holidays_ID		|SK (Holidays)
+|time_of_day_ID		|SK (Time of Day)		
+|start_date		|date
+|end_date		|date
+|holiday_request_body	|text
+|holidays_taken		|number
+|-----------------------|-----------------
+
+|Time of Day
+|---------------|--------------
+|time_of_day_ID	|PK - number
+|name		|text
+|---------------|--------------
+
+|Working Days
+|---------------|--------------
+|working_days_ID|PK - GUID
+|holidays_ID	|SK (Holidays)
+|working_days	|JSON
+|---------------|--------------
+
++----------------------+
+| HOLIDAYS SECTION END |
++----------------------+
++--------------------------------+
+| REPORT COMPLINAT SECTION START |
++--------------------------------+
+
+|Report Complaint
+|-----------------------|------------------------
+|report_complaint_ID	|PK - GUID
+|complaint_category_ID	|SK (Complaint Category)
+|account_ID		|SK (Accounts)
+|complaint_body		|text
+|send_to_manager	|boolean
+|-----------------------|------------------------
+
+|Complaint Category
+|-----------------------|------------
+|complaint_category_ID	|PK - number
+|name			|text
+|-----------------------|------------
+
++------------------------------+
+| REPORT COMPLAINT SECTION END |
++------------------------------+
+
+
+
+
+
+
+
+
+
+
+
+
