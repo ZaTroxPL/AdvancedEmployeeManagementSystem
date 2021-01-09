@@ -1,26 +1,28 @@
-|Users  
-|------
-|ID     
-|------
+|User  
+|-----------|--------------------|
+|user_ID    |PK - (int, for now) |
+|-----------|--------------------|
 
-|Accounts
+|Account
 |---------------|--------------
 |account_ID 	|PK - GUID
-|user_ID 	|SK (Users)
+|user_ID 	    |SK (Users)
 |manager_ID 	|SK (Users)
 |holidays_ID	|SK (Holidays)
 |is_employee 	|boolean
 |is_manager 	|boolean
-|salary 	|money
+|salary 	    |money
 |---------------|--------------
 
 +------------------------+
 | HOLIDAYS SECTION START |
 +------------------------+
 
-|Holidays
+|Holiday
 |---------------|--------------
-|holiday_ID	|PK - GUID
+|holiday_ID	    |PK - GUID
+|account_id	    |SK (Account)
+|working_days_id|SK (Working Days)
 |total_holidays	|number
 |holidays_left	|number
 |holidays_booked|number
@@ -28,27 +30,26 @@
 |on_holiday_for	|number
 |---------------|--------------
 
-|Holiday Requests	
+|Holiday Request	
 |-----------------------|-----------------
-|holiday_request_ID	|PK - GUID
-|holidays_ID		|SK (Holidays)
-|time_of_day_ID		|SK (Time of Day)		
-|start_date		|date
-|end_date		|date
+|holiday_request_ID	    |PK - GUID
+|holidays_ID		    |SK (Holidays)
+|time_of_day_ID		    |SK (Time of Day)
+|start_date		        |date
+|end_date		        |date
 |holiday_request_body	|text
-|holidays_taken		|number
+|holidays_taken		    |number
 |-----------------------|-----------------
 
 |Time of Day
 |---------------|--------------
 |time_of_day_ID	|PK - number
-|name		|text
+|name		    |text
 |---------------|--------------
 
 |Working Days
 |---------------|--------------
 |working_days_ID|PK - GUID
-|holidays_ID	|SK (Holidays)
 |working_days	|JSON
 |---------------|--------------
 
@@ -63,15 +64,15 @@
 |-----------------------|------------------------
 |report_complaint_ID	|PK - GUID
 |complaint_category_ID	|SK (Complaint Category)
-|account_ID		|SK (Accounts)
-|complaint_body		|text
-|send_to_manager	|boolean
+|account_ID		        |SK (Accounts)
+|complaint_body		    |text
+|send_to_your_manager	|boolean
 |-----------------------|------------------------
 
 |Complaint Category
 |-----------------------|------------
 |complaint_category_ID	|PK - number
-|name			|text
+|name			        |text
 |-----------------------|------------
 
 +------------------------------+
