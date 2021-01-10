@@ -62,8 +62,9 @@ export function HomeScreen({ navigation }) {
           onPress={() => {
             console.log(id);
             fetch('http://192.168.0.32:3000')
-            .then(response => response.json())
-            .then(data => console.log(data));
+            .then(console.log("success")).catch((erro) => {
+              console.log(erro);
+            });
           }}
         />
       </View>
