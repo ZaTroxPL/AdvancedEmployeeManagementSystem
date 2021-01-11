@@ -60,11 +60,21 @@ export function HomeScreen({ navigation }) {
         <Button
           title="Submit"
           onPress={() => {
-            console.log(id);
-            fetch('http://192.168.0.32:3000')
-            .then(console.log("success")).catch((erro) => {
-              console.log(erro);
-            });
+
+            const _data = { id: id };
+
+            fetch('http://192.168.0.32:3000/authentication', {
+              method: 'POST',              
+              body: JSON.stringify(_data),
+              headers: { "Content-Type": "application/json; charset=UTF-8",},
+            })
+              .then(response => response.json())
+              .then(data => {
+                console.log('Success:', data.status);
+              })
+              .catch((error) => {
+                console.error('Error:', error);
+              });
           }}
         />
       </View>
