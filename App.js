@@ -71,6 +71,7 @@ export function HomeScreen({ navigation }) {
               .then(response => response.json())
               .then(data => {
                 console.log('Success:', data.status);
+                console.log("UserData: ", data.userData);
               })
               .catch((error) => {
                 console.error('Error:', error);
