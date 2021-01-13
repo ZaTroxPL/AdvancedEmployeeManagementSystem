@@ -38,63 +38,98 @@ export function HomeScreen({ navigation }) {
   const [isEmployee, setIsEmployee] = useState(false);
   const [isManager, setIsManager] = useState(false);
   const [id, setId] = useState(null);
+  const [password, setPassword] = useState(null);
+  const [salary, setSalary] = useState(0);
+  const [isOnHoliday, setIsOnHoliday] = useState(null);
+  const [holidaysLeft, setHolidaysLeft] = useState(null);
 
   return (
     <ScrollView contentContainerStyle={StandardStyles.scrollContainer}>
       <View style={styles.container}>
         <Text style={styles.heading}>
-          Welcome,
-        </Text>
-        <Text style={styles.heading}>
-          please input your ID number.
+          Welcome
         </Text>
       </View>
       <View style={styles.userInput}>
-        <TextInput
-          keyboardType="numeric"
-          style={styles.textInput}
-          onChangeText={(text) => {
-            setId(text);
-          }}
-        />
-        <Button
-          title="Submit"
-          onPress={() => {
+        <View style={styles.credentials}>
+          <Text style={styles.credentialsInput}>
+            ID Number:
+          </Text>
+          <TextInput
+            maxLength={15}
+            autoCompleteType="username"
+            keyboardType="numeric"
+            style={styles.textInput}
+            onChangeText={(text) => {
+              setId(text);
+            }}
+          />
+        </View>
+        <View style={styles.credentials}>
+          <Text style={styles.credentialsInput}>
+            Password:
+          </Text>
+          <TextInput
+            maxLength={25}
+            autoCompleteType="password"
+            secureTextEntry={true}
+            style={styles.textInput}
+            onChangeText={(text) => {
+              setPassword(text);
+            }}
+          />
+        </View>
+        <View style={styles.credentialsButton}>
+          <Button
+            title="Submit"
+            onPress={() => {
 
-            const _data = { id: id };
+              const _data = { id: id };
 
-            fetch('http://192.168.0.32:3000/authentication', {
-              method: 'POST',              
-              body: JSON.stringify(_data),
-              headers: { "Content-Type": "application/json; charset=UTF-8",},
-            })
-              .then(response => response.json())
-              .then(data => {
-                console.log('Success:', data.status);
-                console.log("UserData: ", data.userData);
+              fetch('http://192.168.0.32:3000/authentication', {
+                method: 'POST',
+                body: JSON.stringify(_data),
+                headers: { "Content-Type": "application/json; charset=UTF-8", },
               })
-              .catch((error) => {
-                console.error('Error:', error);
-              });
-          }}
-        />
+                .then(response => response.json())
+                .then(data => {
+                  console.log("UserData: ", data.userData);
+                  setIsEmployee(data.userData.is_employee == 1);
+                  setIsManager(data.userData.is_manager == 1);
+                  setSalary(data.userData.salary);
+                  setIsOnHoliday(data.userData.is_on_holiday == 1);
+                  setHolidaysLeft(data.userData.holidays_left);
+                })
+                .catch((error) => {
+                  console.error('Error:', error);
+                });
+            }}
+          />
+        </View>
       </View>
-      {isEmployee && (<View style={styles.buttons}>
-        <Button
-          title="View Your Profile"
-          onPress={() => {
-            navigation.navigate('Profile')
-          }}
-        />
-      </View>)}
-      {isManager && (<View style={styles.buttons}>
-        <Button
-          title="Managerial View"
-          onPress={() => {
-            navigation.navigate('Managerial View')
-          }}
-        />
-      </View>)}
+      <View style={styles.navigation}>
+        {isEmployee && (<View style={styles.buttons}>
+          <Button
+            title="View Your Profile"
+            onPress={() => {
+              navigation.navigate('Profile', {
+                salary: salary,
+                isOnHoliday: isOnHoliday,
+                holidaysLeft: holidaysLeft
+              })
+            }}
+          />
+        </View>)}
+        {isManager && (<View style={styles.buttons}>
+          <Button
+            title="Managerial View"
+            onPress={() => {
+              navigation.navigate('Managerial View')
+            }}
+          />
+        </View>)}
+      </View>
+
     </ScrollView>
   );
 }
@@ -104,6 +139,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 15,
+    flex: 1
   },
   heading: {
     fontSize: 25,
@@ -113,9 +149,28 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     marginTop: 10
   },
+  userInput: {
+    marginBottom: 0,
+    flex: 1
+  },
+  credentials: {
+    marginBottom: 10
+  },
+  credentialsInput: {
+    fontWeight: 'bold'
+  },
+  credentialsButton: {
+    marginTop: 15
+  },
   textInput: {
     backgroundColor: 'white',
     borderColor: 'black',
     borderWidth: 1,
+    paddingLeft: 5,
+    paddingRight: 5
+  },
+  navigation: {
+    justifyContent: 'center',
+    flex: 98
   }
 })

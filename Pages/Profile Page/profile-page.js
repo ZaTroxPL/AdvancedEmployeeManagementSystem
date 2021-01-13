@@ -6,45 +6,37 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { StandardStyles } from "../../StandardStyles.js";
 
-export function ProfileScreen({ navigation }) {
-    const [employeeName, setEmployeeName] = useState("");
-
-
+export function ProfileScreen({ route, navigation }) {
     return (
         <ScrollView contentContainerStyle={StandardStyles.scrollContainer}>
-            <View style={styles.container}>
+            {/*<View style={styles.container}>
                 <Text style={styles.heading}>Welcome {employeeName}</Text>
-            </View>
-            <EmployeeDetails setParentEmployeeName={setEmployeeName} />
+            </View>*/}
+            <EmployeeDetails employeeDetails={route.params} />
             <EmployeeInteractions navigation={navigation} />
         </ScrollView>
     );
 }
 
 function EmployeeDetails(props) {
-    const [salary, setSalary] = useState(23000);
-    const [holidaysLeft, setHoligdaysLeft] = useState(1);
-    const [leaveStatus, setLeaveStatus] = useState(true);
     const [employeeName, setEmployeeName] = useState("Jakub Panczyszyn");
 
-    function setParentEmployeeName(name) {
-        props.setParentEmployeeName(employeeName);
-    }    
+    var employeeDetails = props.employeeDetails;
 
     return (
         <View>
             <View style={[styles.container, StandardStyles.column]}>
                 <Text style={styles.valueDisplay}>
-                    Name: {employeeName} 
+                    Name: {employeeName}
                 </Text>
                 <Text style={styles.valueDisplay}>
-                    Salary: £{salary}
+                    Salary: £{employeeDetails.salary}
                 </Text>
                 <Text style={styles.valueDisplay}>
-                    Leave Status: {leaveStatus ? "On Leave" : "At Work"}
+                    Leave Status: {employeeDetails.isOnHoliday ? "On Leave" : "At Work"}
                 </Text>
                 <Text style={styles.valueDisplay}>
-                    Holidays Left: {holidaysLeft} {holidaysLeft > 1 || holidaysLeft < 1 ? "days" : "day"}
+                    Holidays Left: {employeeDetails.holidaysLeft} {employeeDetails.holidaysLeft == 1 ? "day" : "days"}
                 </Text>
             </View>
         </View>
