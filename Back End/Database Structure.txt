@@ -1,26 +1,30 @@
-|User  
-|-----------|--------------------|
-|user_ID    |PK - (int, for now) |
-|-----------|--------------------|
+|User 
+|-----------|--------------------
+|user_id    |PK - int
+|name       |text                
+|-----------|--------------------
 
 |Account
 |---------------|--------------
-|account_ID 	|PK - GUID
-|user_ID 	    |SK (Users)
-|manager_ID 	|SK (Users)
-|holidays_ID	|SK (Holidays)
+|account_id     |PK - int
+|account_guid 	|GUID
+|user_id 	    |SK (Users)
+|manager_id 	|SK (Users)
+|holidays_id	|SK (Holidays)
 |is_employee 	|boolean
 |is_manager 	|boolean
+|is_admin       |boolean
 |salary 	    |money
 |---------------|--------------
 
 +------------------------+
-| HOLIDAYS SECTION START |
+| HOLidAYS SECTION START |
 +------------------------+
 
 |Holiday
 |---------------|--------------
-|holiday_ID	    |PK - GUID
+|holiday_id	    |PK - int
+|holiday_guid   |GUID
 |account_id	    |SK (Account)
 |working_days_id|SK (Working Days)
 |total_holidays	|number
@@ -32,9 +36,10 @@
 
 |Holiday Request	
 |-----------------------|-----------------
-|holiday_request_ID	    |PK - GUID
-|holidays_ID		    |SK (Holidays)
-|time_of_day_ID		    |SK (Time of Day)
+|holiday_request_id	    |PK - int
+|holiday_request_guid   |GUID
+|holidays_id		    |SK (Holidays)
+|time_of_day_id		    |SK (Time of Day)
 |start_date		        |date
 |end_date		        |date
 |holiday_request_body	|text
@@ -43,18 +48,19 @@
 
 |Time of Day
 |---------------|--------------
-|time_of_day_ID	|PK - number
+|time_of_day_id	|PK - number
 |name		    |text
 |---------------|--------------
 
 |Working Days
-|---------------|--------------
-|working_days_ID|PK - GUID
-|working_days	|JSON
-|---------------|--------------
+|-------------------|--------------
+|working_days_id    |PK - int
+|working_days_guid  |GUID
+|working_days	    |JSON
+|-------------------|--------------
 
 +----------------------+
-| HOLIDAYS SECTION END |
+| HOLidAYS SECTION END |
 +----------------------+
 +--------------------------------+
 | REPORT COMPLINAT SECTION START |
@@ -62,16 +68,17 @@
 
 |Report Complaint
 |-----------------------|------------------------
-|report_complaint_ID	|PK - GUID
-|complaint_category_ID	|SK (Complaint Category)
-|account_ID		        |SK (Accounts)
+|report_complaint_id	|PK - int
+|report_complaint_guid	|GUID
+|complaint_category_id	|SK (Complaint Category)
+|account_id		        |SK (Accounts)
 |complaint_body		    |text
 |send_to_your_manager	|boolean
 |-----------------------|------------------------
 
 |Complaint Category
 |-----------------------|------------
-|complaint_category_ID	|PK - number
+|complaint_category_id	|PK - number
 |name			        |text
 |-----------------------|------------
 

@@ -2,7 +2,7 @@ import 'react-native-gesture-handler';
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
 import { ScrollView, StyleSheet, Text, View, Button } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, useScrollToTop } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { ProfileScreen } from "./Pages/Profile Page/profile-page.js";
 import { HolidayRequest } from "./Pages/Profile Page/Holiday Request/holiday-request.js"
@@ -12,6 +12,7 @@ import { SubordinateList } from './Pages/Managerial View/View Subordinates/view-
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StandardStyles } from './StandardStyles.js';
 import { TextInput } from 'react-native-gesture-handler';
+import { AdminView } from './Pages/Admin View/admin-view.js';
 
 const Stack = createStackNavigator();
 
@@ -29,19 +30,25 @@ export default function App() {
         <Stack.Screen name="Report Complaint" component={ReportComplaint} />
         <Stack.Screen name="Managerial View" component={ManagerialView} />
         <Stack.Screen name="Subordinate List" component={SubordinateList} />
+        <Stack.Screen name="Admin View" component={AdminView} />
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
 
 export function HomeScreen({ navigation }) {
+  // roles
   const [isEmployee, setIsEmployee] = useState(false);
   const [isManager, setIsManager] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+  // credentials
   const [id, setId] = useState(null);
   const [password, setPassword] = useState(null);
+  // db fields
   const [salary, setSalary] = useState(0);
   const [isOnHoliday, setIsOnHoliday] = useState(null);
   const [holidaysLeft, setHolidaysLeft] = useState(null);
+  const [name, setName] = useState(null);
 
   return (
     <ScrollView contentContainerStyle={StandardStyles.scrollContainer}>
@@ -84,11 +91,11 @@ export function HomeScreen({ navigation }) {
             title="Submit"
             onPress={() => {
 
-              const _data = { id: id };
+              //const _data = { id: id };
 
-              fetch('http://192.168.0.32:3000/authentication', {
-                method: 'POST',
-                body: JSON.stringify(_data),
+              fetch('http://192.168.0.32:3000/api/users/'+ id, {
+                method: 'GET',
+                //body: JSON.stringify(_data),
                 headers: { "Content-Type": "application/json; charset=UTF-8", },
               })
                 .then(response => response.json())
@@ -96,9 +103,11 @@ export function HomeScreen({ navigation }) {
                   console.log("UserData: ", data.userData);
                   setIsEmployee(data.userData.is_employee == 1);
                   setIsManager(data.userData.is_manager == 1);
+                  setIsAdmin(data.userData.is_admin == 1);
                   setSalary(data.userData.salary);
                   setIsOnHoliday(data.userData.is_on_holiday == 1);
                   setHolidaysLeft(data.userData.holidays_left);
+                  setName(data.userData.name);
                 })
                 .catch((error) => {
                   console.error('Error:', error);
@@ -115,7 +124,8 @@ export function HomeScreen({ navigation }) {
               navigation.navigate('Profile', {
                 salary: salary,
                 isOnHoliday: isOnHoliday,
-                holidaysLeft: holidaysLeft
+                holidaysLeft: holidaysLeft,
+                name: name
               })
             }}
           />
@@ -125,6 +135,14 @@ export function HomeScreen({ navigation }) {
             title="Managerial View"
             onPress={() => {
               navigation.navigate('Managerial View')
+            }}
+          />
+        </View>)}
+        {isAdmin && (<View style={styles.buttons}>
+          <Button
+            title="Admin View"
+            onPress={() => {
+              navigation.navigate('Admin View')
             }}
           />
         </View>)}

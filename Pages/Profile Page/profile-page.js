@@ -9,9 +9,6 @@ import { StandardStyles } from "../../StandardStyles.js";
 export function ProfileScreen({ route, navigation }) {
     return (
         <ScrollView contentContainerStyle={StandardStyles.scrollContainer}>
-            {/*<View style={styles.container}>
-                <Text style={styles.heading}>Welcome {employeeName}</Text>
-            </View>*/}
             <EmployeeDetails employeeDetails={route.params} />
             <EmployeeInteractions navigation={navigation} />
         </ScrollView>
@@ -27,7 +24,7 @@ function EmployeeDetails(props) {
         <View>
             <View style={[styles.container, StandardStyles.column]}>
                 <Text style={styles.valueDisplay}>
-                    Name: {employeeName}
+                    Name: {employeeDetails.name}
                 </Text>
                 <Text style={styles.valueDisplay}>
                     Salary: £{employeeDetails.salary}

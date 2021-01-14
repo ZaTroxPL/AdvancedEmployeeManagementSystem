@@ -5,10 +5,20 @@ const app = express();
 app.use(express.json());
 app.listen(3000, () => { })
 
-app.post('/authentication', async function (req, res, next) {
+app.post('/api/users/create', async function (req, res, next) {
     try {
-        console.log("\nBody: " + req.body.id);
-        var result = await databaseInteractions.GetProfileData(req.body.id);
+        console.log("creating new user")
+        var result = await databaseInteractions.CreateProfile(req.body)
+    } catch (error) {
+        next(error)
+    }
+})
+
+app.get('/api/users/:id', async function (req, res, next) {
+    try {
+        const id = req.params.id;
+        console.log(id);
+        var result = await databaseInteractions.GetProfileData(id);
         console.log("about to send response");
         res.send(JSON.stringify({ userData: result }));
     } catch (error) {
